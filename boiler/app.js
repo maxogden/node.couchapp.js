@@ -5,7 +5,7 @@ var couchapp = require('couchapp')
 ddoc = 
   { _id:'_design/app'
   , rewrites: 
-    [ {from:"/", to:'index.html'}
+    [ {from:"/", to:'_show/cors_index', headers: ''}
     , {from:"cache.manifest", to:'_show/cache'}
     , {from:"favicon.png", to:'favicon.ico'}
     , {from:"/api", to:'../../'}    
@@ -23,6 +23,17 @@ ddoc =
           , "body": "CACHE MANIFEST\n" + manifest
           }
         return r;
+      },
+      cors_index: function(head, req) {
+        return { 
+          "headers": { 
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type",
+            "Access-Control-Max-Age": "86400"
+          },
+          "body": "<!doctype html public>  <html manifest=\"/cache.manifest\">    <head>      <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">      <meta name=\"keywords\" content=\"\" />      <meta name=\"description\" content=\"\" />      <link rel=\"shortcut icon\" type=\"image/x-icon\" href=\"favicon.ico\" />      <link rel=\"shortcut icon\" type=\"image/png\" href=\"favicon.png\" />      <title></title>      <link rel=\"stylesheet\" type=\"text/css\" href=\"layout.css\" />      <script language=\"javascript\" type=\"text/javascript\" src=\"jquery-1.4.4.min.js\"></script>      <script language=\"javascript\" type=\"text/javascript\" src=\"sammy/sammy.js\"></script>      <script language=\"javascript\" type=\"text/javascript\" src=\"site.js\"></script>    </head>    <body>    </body>  </html>"
+        }
       }
     }
   }
